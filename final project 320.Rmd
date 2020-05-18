@@ -1,0 +1,254 @@
+---
+title: "Final Project 320"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyr)
+library(tidyverse)
+library(stringr)
+```
+
+## Introduction
+Over all professional team sports every team has one goal, to be the best team in their respective leagues. One way to prove that a team is the best in their respective sport is through a tournament style bracket where the winner is declared the best team for that year. There are many different types of tournaments for each sport, team or one person. The most popular sports in the United States is football, basketball, baseball, and hockey, so every year the NFL, NBA, MLB, and NHL have a playoff system to determine who is the best. To make the tournament competive they only take the top n teams from that year, where n changes for each league. For a breakdown of how each league creates their playoff system check out this website, https://bleacherreport.com/articles/116150-which-sport-has-the-most-exclusive-playoff-system.
+
+
+Since every team wants to be the best and win they need to create a team with the best overall talent and skills. This is no easy task as teams have to make sure they have the right players and system where the coach and managers are successful to succed when they play. One contrasint they have is the salary cap. Most league a cap on how much money they can pay players in order to prevent a good team from getting all the best players. To read more about the salary cap check out this website, https://www.investopedia.com/financial-edge/0910/how-salary-caps-changed-sports.aspx.
+
+One of the leagues that have the lowest salary caps is the NFL. With a lower cap and the sport with the most team memebers, it is hard for a team to consistinly win every year with having new players coming in and leaving based on how much they make. This brings up the questions how do nfl teams create a good enough team that they are able to win the super bowl?
+
+## What makes team win super bowls?
+
+The super bowl has been around for over 50 years with every team appearing in it at least once except for the Clevland Browns, Houston Texans, Detriot Lions, and Jacksonville Jaguars. That is 28 teams who were good enough to make it to the final and have a chance to win. However, what makes these teams good enough to get there? The best way to look at how a team got there is to look at the each team that has won the super bowl and anaylize their offense and defense. There is a huge almways a huge debate on how a team wins a super bowl. Many people consider a good offense wins the best, while others argue that you need a really good defense.The NFL is known to be a copy cat league where if one team does something really well, a lot of teams will try and do the same things with a differnt twist. Usually the best team to copy is the team the is currently the best and has recently won the super bowl. 
+
+
+## The Data
+We are going to look at a dataset found on this website, https://www.kaggle.com/timoboz/superbowl-history-1967-2020.
+This dataframe has the entire history of the super bowl where it details all the important information from that game. This data frame is useful since it can show who won and who they faced and how many points they scored and gave up. This can help determine whether a good offense or defense leads to super bowl wins. First we are going to load in the data set that was downloaded from the website and stored locally.
+
+Then we will look at the data frame that they gave. It has 54 entries and 10 attributes. The 54 entries represent each super bowl over the last 54 years. 
+The 10 attributes represent a ceratin aspect of that super bowl.
+
+Attributes:
+Date: The day that super bowl was held on
+SB: The number super bowl in roman numerials, and the actual number next to it
+Winner: Which team won that super bowl
+Winner Pts: How many points the winner scored
+Loser: The team that lost the game
+Loser Pts: How many points the team who lost scored
+MVP: A player from the winning team who was the best player on the field and help them win the game
+Stadium: The stadium where they played the game
+City: The city where the stadium is and where the game took place
+State: The State where the stadium is and where the game took place.
+
+
+We will take this data and use it to analize how teams win super bowls. 
+
+```{r, include=TRUE}
+
+url <- "C:/Users/Milan/Desktop/College/superbowl.csv"
+sb <- read_csv(url)
+sb
+
+```
+
+
+This section of the code will tidy the data to make it easier to use. This is important becasue there are certain attributes that are not needed. Also it is important to create some variable that are could be important for later on in the analysis.
+
+
+
+```{r, include=TRUE}
+
+nfl1 <- sb %>%
+  mutate(Wp = `Winner Pts`)%>%
+  mutate(Lp = `Loser Pts`)%>%
+  select(Date,SB,Winner,Loser,MVP, Stadium, State, Wp,Lp)%>%
+  filter(Wp > 0)
+nfl1
+
+
+```
+
+## Best Offense
+
+Some people in the football world beleive that a team with the best offense will be better at making the super bowl and winning it. There have been some great offenses in NFL history. The 49ers had a historic west coast offense that helped them reach the super bowl multiple times. This was true for the them as they won two super bowls while scoring a high amount of points. Their system with Joe Montana and Steve Young helpede their teams score the the most and third amount of points in a super bowl. The 1990s Cowboys scored the second most points in a super bowl win with the help of the triplets, Troy Aikman, Emmitt Smith, and Michael Irvin. Even the most recent super bowl champions Kansas City Cheifs won with the help of their superstar quaterback Patrick Mahomes and his fast paced spread offense.
+
+```{r, include=TRUE}
+
+nfl7 <- nfl1%>%
+  filter(Wp > 35)%>%
+  arrange(-Wp)%>%
+  slice(1:10)%>%
+  select(Winner,Wp, Date)
+nfl7
+
+
+
+```
+
+A team needs a good offense to reach the super bowl, but sometimes the points scored in a game can not only be scored by the offense. The special teams unit is also responsible for scoring points either through punt or kick returns, and with the field goal unit where the kicker can put the ball through the goal post and score more points. Another option to score points have come from the defense as well. They can intercept the ball and score a touchdown, or cause a fumble and take it in for a touchdown. A defense is also important to have.
+
+## Best defense
+A team with a good offense can score as many points as they want, but if their defense can't stop the other team from scoring points it becomes hard to win games. Thats why a super bowl winning team needs a good defense to stop the other teams offense from scoring points. Their have been some strong defenses in NFL history. The Chicago Bears had one of the most famous ones that was led by Mike Ditka where they dominated everyone in the regular season. They took their Monsters of the Midway, their defense's nickname, to a super bowl win. Even though their offense was at best average, their dominant defense led the way to a championship. Another team that has had good defenses is the New England Patriots. Led by Bill Billicheck, the pats were very good on defense as they stopped multiple teams offenses with different schemes and usuing creative personnels. They hold the record for the least amount of points allowed in a super bowl. This was even more impressive as they stopped the Los Angles Rams from scoring more than 3 points even though the rams had the best offense in the league that season. Other teams rode a good defense to win super bowls such as the 1970s Miami Dolphins coached by Don Shula, and the Steel Wall, nickname for a domaint Pittsburgh Steelers in the 70s coached by Chuck Noll. 
+
+
+```{r, include=TRUE}
+
+nfl8 <- nfl1%>%
+  filter(Lp < 10)%>%
+  arrange(Lp)%>%
+  select(Winner,Lp, Date)
+nfl8
+
+```
+
+Teams with good defenses have stopped many teams from scoring points, however if they offense can't score any points then games are much closer towards the end which gives them a lower probability to win games. 
+
+
+## Teams with multiple super bowl wins
+
+One way to look at how a team wins a super bowl is to look at the teams that have won multiple. Any team can reach the super bowl off of one aspect that makes their team good that season. Unfortunaly coaches and managers can notice these trends and find successful counters to their plays, so when they run the same system again they might not reach the same level as success.
+
+To better analize how a team can get to a super bowl, you need to look at the teams that have won multiple super bowls. The patriots and steelers have won 6 super bowls, while the cowboys and 49ers have won 5. To best look at how each of these teams won multiple super bowls its best to look at their offense and defenses together. To do that you have to look at how many points they scored and how many points they gave up in each of their super bowl wins. This difference can determine which aspect was more domiant or if they had a more balanced team. 
+
+
+```{r, include=TRUE}
+nfl2 <- nfl1%>%
+  filter(grepl("Dallas Cowboys", Winner))%>%
+  mutate(diff = Wp - Lp)
+
+
+nfl2%>%
+  ggplot(aes(x = SB, y=diff)) +
+    geom_point() + 
+      ggtitle("Dal Point Diff")
+
+
+```
+
+
+```{r, include=TRUE}
+nfl3 <- nfl1%>%
+  filter(grepl("New England Patriots",Winner))%>%
+  mutate(diff = Wp - Lp)
+
+nfl3%>%
+  ggplot(aes(x = SB, y=diff)) +
+    geom_point() +
+      ggtitle("Ne Point Diff")
+      
+```
+
+
+
+
+```{r, include=TRUE}
+nfl4 <- nfl1%>%
+  filter(grepl("Pittsburgh Steelers",Winner))%>%
+  mutate(diff = Wp - Lp)
+
+nfl4%>%
+  ggplot(aes(x = SB, y=diff)) +
+    geom_point() +
+      ggtitle("Pit Point Diff")
+  
+```
+
+
+
+```{r, include=TRUE}
+
+nfl5<- nfl1%>%
+  filter(grepl("San Francisco 49ers",Winner))%>%
+  mutate(diff = Wp - Lp)
+
+nfl5%>%
+  ggplot(aes(x = SB, y=diff)) +
+    geom_point() +
+      ggtitle("Sf Point Diff")
+
+
+```
+
+Based of of these plots, it looks like there is mixed results of how each of those teams have won the super bowl. Some teams had a large point diffential which means they had a good offense, but majoirty were lower which means they had a more balanced team instead of one aspect dominating the other. This shows a more balanced team, meaning having both a offense and defense at the same level can lead to a super bowl win.
+
+
+```{r, include=TRUE}
+
+nfl6<- nfl1 %>%
+  filter(grepl("San Francisco 49ers|Pittsburgh Steelers|New England Patriots|Dallas Cowboys", Winner))%>%
+  group_by(Winner)%>%
+  summarise(s = sum(Wp))
+
+
+nfl6%>%
+  ggplot(aes(x=Winner,y=s)) +
+    geom_bar(stat = "identity") 
+  
+  
+  
+  
+```
+
+
+This plot shows the most amount of points each team scored in their super bowl wins. It shows how the 49ers scored the most showing they are known for their offense
+
+```{r, include=TRUE}
+
+nfl10 <- nfl1%>%
+  filter(grepl("San Francisco 49ers|Pittsburgh Steelers|New England Patriots|Dallas Cowboys", Winner))%>%
+  group_by(Winner)%>%
+  summarise(s = sum(Lp))
+
+nfl10%>%
+  ggplot(aes(x=Winner,y=s)) +
+    geom_bar(stat = "identity")
+
+
+```
+
+This plot shows how many points each team has given up in each super bowl win. It shows how the cowboys had the least amount of points given up in their wins, establishing the notion they have a good defense to get them to the super bowl. 
+
+
+Another variable to track success in winning super bowls is how frequently they would win a super bowl. With all the changing aspects of the NFL with players and coaches coming and going from team to team how did teams keep winning. It is important to look at the years at which they won the super bowl to see if it was spread out or all the wins happened at one time.
+
+```{r, include=TRUE}
+
+nfl9 <- nfl1%>%
+  filter(grepl("San Francisco 49ers|Pittsburgh Steelers|New England Patriots|Dallas Cowboys", Winner))%>%
+  mutate(d = substr(Date,7,11)) %>%
+  mutate(d1 = as.numeric(d))
+
+nfl9%>%
+  ggplot(aes(x=d1,y=Wp,color = Winner)) +
+    geom_point() +
+      geom_smooth(method = loess, formula = 'y ~ x') +
+        ggtitle("Time Lapse") +
+          labs(x = "Time", y = "Change")
+  
+
+```
+
+Based off of this graph it looks mpst teams have had repeated success winning super bowls in a certain time frame. This follows the salary cap change as most teams can't keep all their star players forever since they all want the most money possible for them to earn. There are a few examples of these teams winning in multiple periods such as the steelers in the 70s and 2000s, and the cowboys in 80s and 90s. However most of these teams super bowl wins happenned in a certain time period. 
+
+## Conclusion
+
+From the analysis above it shows that a single team with a good offense or a good defense can win a super bowl, but to have a multiple super bowl wins and consistent success the team should be more balanced. It was shown the more balanced teams win more as they can rely on each other to score or prevent points from being scored in the cluthch moments that are needed to win a game. 
+
+To win a super bowl proves you have competed aganist the best in the league come out on top. With the overall change from season to season with the salary cap, people moving from team to team, and other teams copying or stopping aspects of the game that you are doing well it shows that it takes a lot of variables needed checked off to try and win a super bowl. Winning teams have overcome all of them to be crowned national champions every year. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
